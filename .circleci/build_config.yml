@@ -1352,10 +1352,6 @@ commands:
             - *step-gclient-sync
             - store_artifacts:
                 path: patches
-            - when:
-                condition: << parameters.save-git-cache >>
-                steps:
-                  - *step-save-git-cache
             # These next few steps reset Electron to the correct commit regardless of which cache was restored
             - run:
                 name: Wipe Electron
@@ -1364,6 +1360,11 @@ commands:
             - *step-run-electron-only-hooks
             - *step-generate-deps-hash-cleanly
             - *step-mark-sync-done
+            # Save git cache AFTER sync marked done because other jobs expect that to be the case
+            - when:
+                condition: << parameters.save-git-cache >>
+                steps:
+                  - *step-save-git-cache            
             - *step-minimize-workspace-size-from-checkout
             - *step-delete-git-directories
             - when:
