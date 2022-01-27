@@ -932,7 +932,7 @@ step-save-git-cache: &step-save-git-cache
   save_cache:
     paths:
       - ~/.gclient-cache
-    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done" }}-{{ checksum "src/electron/DEPS" }}
+    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done" }}
     name: Persisting git cache
 
 step-save-out-cache: &step-save-out-cache
