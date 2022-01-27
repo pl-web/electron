@@ -1217,7 +1217,7 @@ commands:
                 name: Halt the job early if the src cache exists
                 command: |
                   if [ -f ".src-cache-marker" ]; then
-                    circleci-agent step halt
+                    echo "circleci-agent step halt"
                   fi
       - *step-maybe-restore-src-cache
       - run:
