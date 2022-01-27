@@ -932,7 +932,7 @@ step-save-git-cache: &step-save-git-cache
   save_cache:
     paths:
       - ~/.gclient-cache
-    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done-dummy" }}
+    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done" }}
     name: Persisting git cache
 
 step-save-out-cache: &step-save-out-cache
@@ -1218,7 +1218,6 @@ commands:
                 command: |
                   if [ -f ".src-cache-marker" ]; then
                     echo "circleci-agent step halt"
-                    touch src/electron/.circle-sync-done-dummy
                   fi
       - *step-maybe-restore-src-cache
       - run:
