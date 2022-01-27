@@ -257,7 +257,6 @@ step-gclient-sync: &step-gclient-sync
     name: Gclient sync
     command: |
       # If we did not restore a complete sync then we need to sync for realz
-      if [ ! -s "src/electron/.circle-sync-done" ]; then
         gclient config \
           --name "src/electron" \
           --unmanaged \
@@ -294,7 +293,6 @@ step-gclient-sync: &step-gclient-sync
             fi
           fi
         fi
-      fi
 
 step-setup-env-for-build: &step-setup-env-for-build
   run:
@@ -932,7 +930,7 @@ step-save-git-cache: &step-save-git-cache
   save_cache:
     paths:
       - ~/.gclient-cache
-    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done" }}
+    key: v4-gclient-cache-{{ checksum "src/electron/.circle-sync-done" }}-{{ checksum "src/electron/DEPS" }}
     name: Persisting git cache
 
 step-save-out-cache: &step-save-out-cache
