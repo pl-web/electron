@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: clavin <cwatford@slack-corp.com>
+Date: Fri, 28 Jan 2022 13:25:35 -0700
+Subject: fix: mark non-client move events as handled
+
+On windows, for windows where the web contents covers non-client area, e.g. the
+window controls on a WCO-enabled window, there is an issue where failing to
+mark non-cient mouse events as handled will cause them to bubble to the default
+system window message handler, causing it to take control in cases where we
+expect to have it (like hover effects).
+
+This patch can be removed once |LegacyRenderWidgetHostHWND::OnMouseRange| no
+longer is able to cause non-client mouse events to trigger twice on these kinds
+of windows. This either entails the refactoring/removal of
+|LegacyRenderWidgetHostHWND| or an upstream change similar to this one that
+circumvents the issue.
+
+diff --git a/ui/views/widget/widget.cc b/ui/views/widget/widget.cc
+index b96ce533db42025fb19c5cd7e8a73d6777e84e14..848ed97044d36c0622ad9f542ae316bc5297270d 100644
+--- a/ui/views/widget/widget.cc
++++ b/ui/views/widget/widget.cc
+@@ -1569,6 +1569,8 @@ void Widget::OnMouseEvent(ui::MouseEvent* event) {
+         last_mouse_event_was_move_ = true;
+         if (root_view)
+           root_view->OnMouseMoved(*event);
++        if ((event->flags() & ui::EF_IS_NON_CLIENT) == 1)
++          event->SetHandled();
+       }
+       return;
+ 
